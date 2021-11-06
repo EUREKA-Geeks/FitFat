@@ -10,48 +10,46 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
+@Configuration
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    UserDetailsService userDetailsService;
 
-
-    @Configuration
-    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-        @Autowired
-        UserDetailsService userDetailsService;
-
-        @Bean
-        public BCryptPasswordEncoder passwordEncoder(){
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            return bCryptPasswordEncoder;
-        }
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        }
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.cors()
-                    .disable()
-                    .csrf()
-                    .disable()
-                    .authorizeRequests()
-                    .antMatchers( "/login", "/signup","/","style.css")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and().
-                    formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/perform_login")
-                    .defaultSuccessUrl("/", true)
-                    .failureUrl("/error")
-                    .and()
-                    .logout()
-                    .logoutUrl("/perform_logout")
-                    .logoutSuccessUrl("/index")
-                    .deleteCookies("JSESSIONID");
-        }
-
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors()
+                .disable()
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/users*").permitAll()
+                .antMatchers("/login", "/signup", "/", "style.css")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and().
+                formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/error")
+                .and()
+                .logout()
+                .logoutUrl("/perform_logout")
+                .logoutSuccessUrl("/index")
+                .deleteCookies("JSESSIONID");
+    }
+
+}
 
 

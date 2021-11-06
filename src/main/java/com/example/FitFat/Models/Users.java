@@ -1,4 +1,4 @@
-package com.example.FitFat.models;
+package com.example.FitFat.Models;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,19 +14,32 @@ public abstract class Users implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
     private Date DOB;
-    @Column (unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+    @Column(unique = true)
     private String phoneNumber;
 
+    public Users() {
+    }
 
+    public Users(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.DOB = DOB;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 
     public Long getId() {
         return id;

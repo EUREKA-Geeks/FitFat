@@ -1,7 +1,7 @@
 package com.example.FitFat.Security;
 
-import com.example.FitFat.Model.GymAdminUser;
-import com.example.FitFat.Repository.GymAdminUserRepository;
+import com.example.FitFat.Models.GymAdmin;
+import com.example.FitFat.Repositories.GymAdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    GymAdminUserRepository applicationUserRepository;
+    GymAdminRepository applicationUserRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        GymAdminUser applicationUser= applicationUserRepository.findByUsername(username);
+        GymAdmin applicationUser= applicationUserRepository.findByUsername(username);
         if(applicationUser==null){
             throw new UsernameNotFoundException("the user name "+username+"not found");
         }
