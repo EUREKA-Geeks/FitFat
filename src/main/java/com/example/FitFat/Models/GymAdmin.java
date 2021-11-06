@@ -23,7 +23,7 @@ public class GymAdmin extends Users {
         return gym;
     }
 
-    
+
     public GymAdmin() {
     }
 
