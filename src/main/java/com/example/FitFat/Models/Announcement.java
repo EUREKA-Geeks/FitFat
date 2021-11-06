@@ -71,4 +71,10 @@ public class Announcement {
     public void setTrainer(Trainer trainer) {
         this.trainer = trainer;
     }
+
+    public Announcement(String body, Trainer trainer) {
+        this.body = body;
+        this.trainer = trainer;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
 }
