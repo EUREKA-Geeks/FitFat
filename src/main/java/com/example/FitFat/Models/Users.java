@@ -28,6 +28,18 @@ public abstract class Users implements UserDetails {
     @Column(unique = true)
     private String phoneNumber;
 
+    @ManyToOne
+    @JoinColumn(name = "gym_id")
+    private Gym gym;
+
+    public Gym getGym() {
+        return gym;
+    }
+
+    public void setGym(Gym gym) {
+        this.gym = gym;
+    }
+
     public Users() {
     }
 

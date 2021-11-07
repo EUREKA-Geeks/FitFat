@@ -1,10 +1,9 @@
 package com.example.FitFat.Controller;
 
-import com.example.FitFat.Models.GymAdmin;
+
 import com.example.FitFat.Models.Trainee;
 import com.example.FitFat.Models.Trainer;
 import com.example.FitFat.Models.Users;
-import com.example.FitFat.Repositories.GymAdminRepository;
 import com.example.FitFat.Repositories.TraineeRepository;
 import com.example.FitFat.Repositories.TrainerRepository;
 import com.example.FitFat.Repositories.UsersRepository;
@@ -24,8 +23,7 @@ import java.util.List;
 @Controller
 public class GymAdminController {
 
-    @Autowired
-    GymAdminRepository gymAdminRepository;
+
     @Autowired
     TraineeRepository traineeRepository;
     @Autowired
@@ -52,12 +50,12 @@ public class GymAdminController {
         } catch (Exception e) {
             System.out.println("Trainee");
         }
-        try {
-            GymAdmin gymAdmin1 = new GymAdmin("mawmoon", "123456", "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmaaawwwwaam", "0758");
-            gymAdminRepository.save(gymAdmin1);
-        } catch (Exception e) {
-            System.out.println("Gymadmin");
-        }
+//        try {
+//            GymAdmin gymAdmin1 = new GymAdmin("mawmoon", "123456", "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmaaawwwwaam", "0758");
+//            gymAdminRepository.save(gymAdmin1);
+//        } catch (Exception e) {
+//            System.out.println("Gymadmin");
+//        }
 
         return "Yes";
     }
@@ -65,7 +63,6 @@ public class GymAdminController {
     @GetMapping("/users")
     @ResponseBody
     public List<Users> getAll() {
-        System.out.println(gymAdminRepository.findAll());
         System.out.println(traineeRepository.findAll());
         System.out.println(trainerRepository.findAll());
         return usersRepository.findAll();
@@ -76,11 +73,11 @@ public class GymAdminController {
         return "signup";
     }
 
-    @PostMapping("/signup")
-    public RedirectView signUpUser(@RequestBody GymAdmin gymAdmin) {
-        gymAdminRepository.save(gymAdmin);
-        return new RedirectView("/login");
-    }
+//    @PostMapping("/signup")
+//    public RedirectView signUpUser(@RequestBody GymAdmin gymAdmin) {
+//        gymAdminRepository.save(gymAdmin);
+//        return new RedirectView("/login");
+//    }
 
     @GetMapping("/login")
     public String login() {
@@ -88,14 +85,14 @@ public class GymAdminController {
         return "login.html";
     }
 
-    @GetMapping("/profile")
-    public String getProfile(Model m, Principal principal) {
-        try {
-            GymAdmin user = gymAdminRepository.findByUsername(principal.getName());
-            m.addAttribute("user", user);
-            return "profile";
-        } catch (Exception e) {
-            return "error";
-        }
-    }
+//    @GetMapping("/profile")
+//    public String getProfile(Model m, Principal principal) {
+//        try {
+//            GymAdmin user = gymAdminRepository.findByUsername(principal.getName());
+//            m.addAttribute("user", user);
+//            return "profile";
+//        } catch (Exception e) {
+//            return "error";
+//        }
+//    }
 }

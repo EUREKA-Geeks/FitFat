@@ -33,9 +33,9 @@ public class Gym {
     // this is a relation for class of admin for the gym
 
     @OneToMany(mappedBy = "gym", orphanRemoval = true)
-    private List<GymAdmin> admin;
+    private List<Users> admin;
 
-    public Gym(String name, ArrayList<String> location, String phoneNumber, String bio, String photo, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours, List<Announcement> announcement, List<GymAdmin> admin) {
+    public Gym(String name, ArrayList<String> location, String phoneNumber, String bio, String photo, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours, List<Announcement> announcement, List<Users> admin) {
         this.name = name;
         this.location = location;
         this.phoneNumber = phoneNumber;
@@ -135,11 +135,11 @@ public class Gym {
         return trainers;
     }
 
-    public void setAdmin(List<GymAdmin> admin) {
+    public void setAdmin(List<Users> admin) {
         this.admin = admin;
     }
 
-    public List<GymAdmin> getAdmin() {
+    public List<Users> getAdmin() {
         return admin;
     }
 
