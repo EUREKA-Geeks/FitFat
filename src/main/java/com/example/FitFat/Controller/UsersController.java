@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/user")
 public class UsersController {
 
     @Autowired
@@ -42,16 +42,17 @@ public class UsersController {
     //User can edit his profile
     @PutMapping("/update/{id}")
     public ResponseEntity updateUser(@PathVariable Long id, @RequestBody Users users) {
-        Users updateUser = usersRepository.findById(id).get();
-        updateUser.setUsername(users.getUsername());
-        updateUser.setPassword(users.getPassword());
-        updateUser.setFirstName(users.getFirstName());
-        updateUser.setLastName(users.getLastName());
-        updateUser.setDOB(users.getDOB());
-        updateUser.setEmail(users.getEmail());
-        updateUser.setPhoneNumber(users.getPhoneNumber());
-        updateUser = usersRepository.save(users);
-        return ResponseEntity.ok(updateUser);
+//        Users updateUser = usersRepository.findById(id).get();
+//        updateUser.setUsername(users.getUsername());
+//        updateUser.setPassword(users.getPassword());
+//        updateUser.setFirstName(users.getFirstName());
+//        updateUser.setLastName(users.getLastName());
+//        updateUser.setDOB(users.getDOB());
+//        updateUser.setEmail(users.getEmail());
+//        updateUser.setPhoneNumber(users.getPhoneNumber());
+//        updateUser = usersRepository.save(users);
+        usersRepository.save(users);
+        return ResponseEntity.ok(users);
     }
 
 

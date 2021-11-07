@@ -10,13 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
-@Controller
-@RequestMapping
+@RestController
+@RequestMapping("trainee")
 public class TraineeController {
 
 
@@ -35,25 +33,24 @@ public class TraineeController {
     SessionRepository sessionRepository;
 
 
-
     @Autowired
     PasswordEncoder encoder;
 
-    @GetMapping ("/profil")
-    public String getProfile(Model model, Principal principal){
+    @GetMapping("/profile")
+    public String getProfile(Model model, Principal principal) {
         try {
             Trainee profile = traineeRepository.findByUsername(principal.getName());
-            model.addAttribute("profile",profile);
+            model.addAttribute("profile", profile);
             return "yes";
-        }catch (Exception e){
+        } catch (Exception e) {
             return "profile is not exist";
         }
 
     }
 
     //to let the loggedin user to see the other profile
-    @GetMapping ("/profile/{id}")
-    public String getProfileByID(@PathVariable Long id,Principal principal,Model model){
+    @GetMapping("/profile/{id}")
+    public String getProfileByID(@PathVariable Long id, Principal principal, Model model) {
 
         try {
 
@@ -65,35 +62,38 @@ public class TraineeController {
             return "yes";
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "the profile is not exist";
         }
-
 
 
     }
 
     //adding new gym to trainee
-    @PostMapping ("/gym")
-    @ResponseBody
+    @PostMapping("/gym")
     //    public Gym(String name, ArrayList<String> location, String phoneNumber, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours) {
-    public String subscribeToOneGym( Principal principal,@RequestParam(value="name") String name,
-                                                         @RequestParam(value="location") ArrayList<String> location,
-                                                        @RequestParam(value = "phoneNumber")String phoneNumber,
-                                                         @RequestParam(value = "features")ArrayList<String> features,
-                                                         @RequestParam(value = "trainees") List<Trainee> trainees,
-                                                         @RequestParam(value = "trainers")List<Trainer> trainers,
-                                                         @RequestParam(value = "openHours")ArrayList<String>openHours){
+    public String subscribeToOneGym(Principal principal, @RequestBody Gym gym
+//                                    @RequestParam(value = "name") String name,
+//                                    @RequestParam(value = "location") ArrayList<String> location,
+//                                    @RequestParam(value = "phoneNumber") String phoneNumber,
+//                                    @RequestParam(value = "features") ArrayList<String> features,
+//                                    @RequestParam(value = "trainees") List<Trainee> trainees,
+//                                    @RequestParam(value = "trainers") List<Trainer> trainers,
+//                                    @RequestParam(value = "openHours") ArrayList<String> openHours
+    ) {
 
         try {
             Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
-            Gym gym = new Gym(name,location,phoneNumber,features,trainees,trainers,openHours);
-
-            gymRepository.save(gym);
+            loggedTrainee.setGym(gym);
+            Calendar calendar = Calendar.getInstance();
+            loggedTrainee.setSubscriptionStart(java.sql.Date.valueOf(String.valueOf(calendar)));
+            calendar.add(Calendar.MONTH, 1);
+            loggedTrainee.setEndOFSubscription(java.sql.Date.valueOf(String.valueOf(calendar)));
+            traineeRepository.save(loggedTrainee);
 
             return "yes";
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "you are not allowed";
 
         }
@@ -102,41 +102,43 @@ public class TraineeController {
 
 
     //to delete a gym
-    @DeleteMapping("/deletegym/{id}")
+    @DeleteMapping("/deleteGym/{id}")
 //    @ResponseBody
-    public String  deleteSubscribe(@PathVariable Long id, Principal principal ){
+    public String deleteSubscribe(@PathVariable Long id, Principal principal) {
         try {
             Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
-
-            Gym gym = gymRepository.findGymById(id);
-            gymRepository.delete(gym);
+            loggedTrainee.setGym(null);
+            loggedTrainee.setSubscriptionStart(null);
+            loggedTrainee.setEndOFSubscription(null);
             return "yes";
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "cant delete the gym";
         }
 
     }
+
     //to add a trainer to trainee
-    @PostMapping  ("/trainer")
-    public String subscribeToTrainer(Principal principal,  @RequestParam(value="specialTraining") String specialTraining,
-                                       @RequestParam(value="experience") String experience,
-                                       @RequestParam(value = "gym") Gym gym,
-                                       @RequestParam(value = "availability")String availability,
-                                       @RequestParam(value = "trainee") List<Trainee> trainee,
-                                       @RequestParam(value = "session")List<Session> session,
-                                       @RequestParam(value ="price")int price){
+    @PostMapping("/trainer")
+    public String subscribeToTrainer(Principal principal, @RequestBody Trainer trainer
+//                                     @RequestParam(value = "specialTraining") String specialTraining,
+//                                     @RequestParam(value = "experience") String experience,
+//                                     @RequestParam(value = "gym") Gym gym,
+//                                     @RequestParam(value = "availability") String availability,
+//                                     @RequestParam(value = "trainee") List<Trainee> trainee,
+//                                     @RequestParam(value = "session") List<Session> session,
+//                                     @RequestParam(value = "price") int price
+    ) {
 
 
         try {
             Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
-            Trainer trainer = new Trainer(specialTraining,experience,gym,availability,trainee,session,price);
-
-            trainerRepository.save(trainer);
+            loggedTrainee.setTrainer(trainer);
+            traineeRepository.save(loggedTrainee);
             return "yes";
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "you are not allowed";
 
         }
@@ -146,40 +148,40 @@ public class TraineeController {
 
     @DeleteMapping("/delete/{id}")
 //    @ResponseBody
-    public String  deleteTrainer(@PathVariable Long id, Principal principal ){
+    public String deleteTrainer(@PathVariable Long id, Principal principal) {
         try {
             Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
-
-
-            Trainer trainer = trainerRepository.findUserById(id);
-            trainerRepository.delete(trainer);
+            loggedTrainee.setTrainer(null);
+            traineeRepository.save(loggedTrainee);
             return "yes";
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "cant delete the trainer";
         }
 
     }
-//    to add a session to trainee
-    @PostMapping("/session")
-    public String bookSession(Principal principal,  @RequestParam(value="capacity") int capacity,
-                                                    @RequestParam(value="type") String type,
-                                                    @RequestParam(value = "day") Date day,
-                                                    @RequestParam(value = "location")String location,
-                                                    @RequestParam(value = "trainer") Trainer trainer,
-                                                    @RequestParam(value = "trainee")List<Trainee> trainee){
-        try {
-            Trainee loggedTrainee= traineeRepository.findByUsername(principal.getName());
-            Session sessions = new Session(capacity,type, (java.sql.Date) day,location,trainer,trainee);
 
+    // to add a session to trainee
+    @PostMapping("/session")
+    public String bookSession(Principal principal, @RequestBody Session session
+//                              @RequestParam(value = "capacity") int capacity,
+//                              @RequestParam(value = "type") String type,
+//                              @RequestParam(value = "day") Date day,
+//                              @RequestParam(value = "location") String location,
+//                              @RequestParam(value = "trainer") Trainer trainer,
+//                              @RequestParam(value = "trainee") List<Trainee> trainee
+    ) {
+        try {
+            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
+            loggedTrainee.addSession(session);
+            traineeRepository.save(loggedTrainee);
 //            Session sessionsList = sessions.;
 
-            sessionRepository.save(sessions);
             return "yes";
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "the session not found";
         }
 
@@ -187,16 +189,11 @@ public class TraineeController {
     }
 
     //to see the trainee subscription start - end
-
-    public String getSubTime(){
-
-    return "yes";
+    @GetMapping("subs")
+    public String getSubTime(Principal principal) {
+        Trainee trainee = traineeRepository.findByUsername(principal.getName());
+        return String.valueOf(trainee.getSubscriptionStart());
     }
-
-
-
-
-
 
 
 }

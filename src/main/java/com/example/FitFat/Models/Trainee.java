@@ -80,4 +80,32 @@ public class Trainee extends Users {
     public void setMedicalStatus(String medicalStatus) {
         this.medicalStatus = medicalStatus;
     }
+
+    public Date getSubscriptionStart() {
+        return SubscriptionStart;
+    }
+
+    public void setSubscriptionStart(Date subscriptionStart) {
+        SubscriptionStart = subscriptionStart;
+    }
+
+    public Date getEndOFSubscription() {
+        return endOFSubscription;
+    }
+
+    public void setEndOFSubscription(Date endOFSubscription) {
+        this.endOFSubscription = endOFSubscription;
+    }
+
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+    }
+
+    public void setGym(Gym gym) {
+        this.gym = gym;
+    }
+
+    public void addSession(Session session) {
+        this.sessions.add(session);
+    }
 }
