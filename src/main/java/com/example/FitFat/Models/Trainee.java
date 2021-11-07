@@ -18,7 +18,7 @@ public class Trainee extends Users {
     private Trainer trainer;
 
     @ManyToMany
-    @JoinTable(name = "null_sessions",
+    @JoinTable(name = "trainee_sessions",
             joinColumns = @JoinColumn(name = "trainee_id"),
             inverseJoinColumns = @JoinColumn(name = "sessions_id"))
     private List<Session> sessions;

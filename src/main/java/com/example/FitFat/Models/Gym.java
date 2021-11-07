@@ -35,6 +35,29 @@ public class Gym {
     @OneToMany(mappedBy = "gym", orphanRemoval = true)
     private List<GymAdmin> admin;
 
+    public Gym(String name, ArrayList<String> location, String phoneNumber, String bio, String photo, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours, List<Announcement> announcement, List<GymAdmin> admin) {
+        this.name = name;
+        this.location = location;
+        this.phoneNumber = phoneNumber;
+        this.bio = bio;
+        this.photo = photo;
+        this.features = features;
+        this.trainees = trainees;
+        this.trainers = trainers;
+        this.openHours = openHours;
+        this.announcement = announcement;
+        this.admin = admin;
+    }
+
+    public Gym(String name, ArrayList<String> location, String phoneNumber, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours) {
+        this.name = name;
+        this.location = location;
+        this.phoneNumber = phoneNumber;
+        this.features = features;
+        this.trainees = trainees;
+        this.trainers = trainers;
+        this.openHours = openHours;
+    }
 
     public void setName(String name) {
         this.name = name;
