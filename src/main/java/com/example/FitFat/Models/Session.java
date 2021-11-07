@@ -21,6 +21,18 @@ public class Session {
     @ManyToMany(mappedBy = "sessions")
     private List<Trainee> trainee;
 
+    @ManyToOne
+    @JoinColumn(name = "gym_id")
+    private Gym gym;
+
+    public Gym getGym() {
+        return gym;
+    }
+
+    public void setGym(Gym gym) {
+        this.gym = gym;
+    }
+
     public void setTrainer(Trainer trainer) {
         this.trainer = trainer;
     }
@@ -28,13 +40,14 @@ public class Session {
     public Session() {
     }
 
-    public Session(int capacity, String type, Date day, String location, Trainer trainer, List<Trainee> trainee) {
+    public Session(int capacity, String type, Date day, String location, Trainer trainer, List<Trainee> trainee, Gym gym) {
         this.capacity = capacity;
         this.type = type;
         this.day = day;
         this.location = location;
         this.trainer = trainer;
         this.trainee = trainee;
+        this.gym = gym;
     }
 
     public int getCapacity() {

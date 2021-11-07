@@ -108,4 +108,9 @@ public class Trainee extends Users {
     public void addSession(Session session) {
         this.sessions.add(session);
     }
+
+    public Trainee( Date subscriptionStart, Date endOFSubscription) {
+        SubscriptionStart = subscriptionStart;
+        this.endOFSubscription = endOFSubscription;
+    }
 }

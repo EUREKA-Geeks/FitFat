@@ -37,7 +37,7 @@ public class TrainerController {
 
     //// the return type will be changing for methods, no testing
 
-    // Trainer can add anouncment
+    // Trainer can add announcement
     @PostMapping("/addAnnouncement")
     public ResponseEntity addAnnouncement(Principal principal, @RequestParam String body){
         // just to avoid conflict I add another constructor At the end of Announcement model .

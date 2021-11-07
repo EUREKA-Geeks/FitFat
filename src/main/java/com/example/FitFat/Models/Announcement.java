@@ -77,4 +77,5 @@ public class Announcement {
         this.trainer = trainer;
         this.createdAt = new Timestamp(System.currentTimeMillis());
     }
+
 }

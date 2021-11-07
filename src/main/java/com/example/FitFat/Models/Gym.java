@@ -1,7 +1,6 @@
 package com.example.FitFat.Models;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +24,9 @@ public class Gym {
     private List<Trainee> trainees;
 
     @OneToMany(mappedBy = "gym", orphanRemoval = true)
+    private List<Session> sessions;
+
+    @OneToMany(mappedBy = "gym", orphanRemoval = true)
     private List<Trainer> trainers;
     private ArrayList<String> openHours = new ArrayList<>();
     // this should be announcement class;
@@ -35,7 +37,7 @@ public class Gym {
     @OneToMany(mappedBy = "gym", orphanRemoval = true)
     private List<Users> admin;
 
-    public Gym(String name, ArrayList<String> location, String phoneNumber, String bio, String photo, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours, List<Announcement> announcement, List<Users> admin) {
+    public Gym(String name, ArrayList<String> location, String phoneNumber, String bio, String photo, ArrayList<String> features, List<Trainee> trainees, List<Session> sessions, List<Trainer> trainers, ArrayList<String> openHours, List<Announcement> announcement, List<Users> admin) {
         this.name = name;
         this.location = location;
         this.phoneNumber = phoneNumber;
@@ -43,9 +45,14 @@ public class Gym {
         this.photo = photo;
         this.features = features;
         this.trainees = trainees;
+        this.sessions = sessions;
         this.trainers = trainers;
         this.openHours = openHours;
         this.announcement = announcement;
+        this.admin = admin;
+    }
+
+    public Gym(List<Users> admin){
         this.admin = admin;
     }
 
@@ -107,6 +114,14 @@ public class Gym {
         return openHours;
     }
 
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
+
     public void setOpenHours(ArrayList<String> openHours) {
         this.openHours = openHours;
     }
@@ -153,5 +168,12 @@ public class Gym {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public void deleteTrainer(Trainer trainer){this.trainers.remove(trainer);}
+    public void deleteTrainee(Trainee trainee){this.trainees.remove(trainee);}
+    public void deleteAnnouncement(Announcement announcement){this.announcement.remove(announcement);}
+    public void deleteSession(Session session){this.sessions.remove(session);}
+    public void updateGym(){}
+    public Gym() {
     }
 }
