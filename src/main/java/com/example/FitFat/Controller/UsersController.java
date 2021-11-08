@@ -4,12 +4,13 @@ import com.example.FitFat.Models.Users;
 import com.example.FitFat.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
 public class UsersController {
@@ -32,12 +33,13 @@ public class UsersController {
     }
 
     //sign up new User with redirect login
-    @PostMapping("/signup")
-    public RedirectView signup(@ModelAttribute Users users) {
-        users.setPassword(encoder.encode(users.getPassword()));
-        usersRepository.save(users);
-        return new RedirectView("/login");
-    }
+    @PostMapping(value = "/signup")
+    public ResponseEntity register(@RequestBody Users user) {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            Users savedUser = usersRepository.save(user);
+
+        return ResponseEntity.ok(user);
+            }
 
     //User can edit his profile
     @PutMapping("/update/{id}")
