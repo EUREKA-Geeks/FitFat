@@ -1,45 +1,87 @@
 package com.example.FitFat.Controller;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+
+import com.example.FitFat.Models.LoginRequest;
 import com.example.FitFat.Models.Trainee;
 import com.example.FitFat.Models.Trainer;
 import com.example.FitFat.Models.Users;
 import com.example.FitFat.Repositories.TraineeRepository;
 import com.example.FitFat.Repositories.TrainerRepository;
 import com.example.FitFat.Repositories.UsersRepository;
+import com.example.FitFat.Security.JwtResponse;
+import com.example.FitFat.Security.JwtUtils;
+import com.example.FitFat.Security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.security.Principal;
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.security.authentication.AuthenticationManager;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
 
 
+@CrossOrigin(origins = "*")
 @Controller
 public class GymAdminController {
-
-
+    @Autowired
+    AuthenticationManager authenticationManager;
     @Autowired
     TraineeRepository traineeRepository;
     @Autowired
     TrainerRepository trainerRepository;
     @Autowired
     UsersRepository usersRepository;
-
     @Autowired
     PasswordEncoder encoder;
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                userDetails.getFirstName(), userDetails.getLastName(), "", 5
+                , roles));
+    }
 
 
     @GetMapping("/")
     @ResponseBody
     public String home() {
         try {
-            Trainer trainer = new Trainer("mamoon", "123456", "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmm", "0789");
+            Trainer trainer = new Trainer("mamoon", encoder.encode("123456"), "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmm", "0789");
             trainerRepository.save(trainer);
         } catch (Exception e) {
             System.out.println("Trainer");
