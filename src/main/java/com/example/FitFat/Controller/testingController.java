@@ -30,9 +30,9 @@ public class testingController {
     TrainerRepository trainerRepository;
 
 
-
     @Autowired
     SessionRepository sessionRepository;
+
     @GetMapping("/profil")
     public List<Trainee> getProfile() {
 
@@ -43,10 +43,8 @@ public class testingController {
 //
 
 
-
-
-
     }
+
     @GetMapping("/trainer")
     public List<Trainer> getTrainer() {
 
@@ -57,23 +55,6 @@ public class testingController {
 //
 
 
-
-
-
     }
-    @GetMapping("/gym")
-    public List<Gym> getGym() {
-        Gym gym = new Gym("golden", "amman","07988888","golden is gold","photo","saona","man","8am-11pm","8am-11pm","ddddd","man");
-
-//            Trainee profile = traineeRepository.findByUsername(principal.getName());
-
-//            model.addAttribute("profile", profile);
-        return gymRepository.findAll();
-//
-
-
-
-
-
-    }
+    
 }

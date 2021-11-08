@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/trainee")
 public class TraineeController {
@@ -67,6 +68,12 @@ public class TraineeController {
         }
 
 
+    }
+
+    @PostMapping("/signup")
+    public String signupTrainee(@RequestBody Trainee trainee) {
+        System.out.println(trainee);
+        return "yes";
     }
 
     //adding new gym to trainee

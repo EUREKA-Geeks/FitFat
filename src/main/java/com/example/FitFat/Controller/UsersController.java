@@ -33,13 +33,7 @@ public class UsersController {
     }
 
     //sign up new User with redirect login
-    @PostMapping(value = "/signup")
-    public ResponseEntity register(@RequestBody Users user) {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            Users savedUser = usersRepository.save(user);
 
-        return ResponseEntity.ok(user);
-            }
 
     //User can edit his profile
     @PutMapping("/update/{id}")
