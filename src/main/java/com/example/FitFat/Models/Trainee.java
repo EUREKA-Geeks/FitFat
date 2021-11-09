@@ -53,12 +53,12 @@ public class Trainee extends Users {
         this.endOFSubscription = endOFSubscription;
     }
 
-    public Trainee(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber) {
-        super(username, password, firstName, lastName, DOB, email, phoneNumber);
+    public Trainee(String name, String email, String phoneNumber, String img) {
+        super(name, email, phoneNumber, img);
     }
 
-    public Trainee(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber, String gender, String medicalStatus, Date subscriptionStart, Date endOFSubscription) {
-        super(username, password, firstName, lastName, DOB, email, phoneNumber);
+    public Trainee(String name, String email, String phoneNumber, String img, String gender, String medicalStatus, Date subscriptionStart, Date endOFSubscription) {
+        super(name, email, phoneNumber, img);
         this.gender = gender;
         this.medicalStatus = medicalStatus;
         SubscriptionStart = subscriptionStart;
@@ -109,7 +109,7 @@ public class Trainee extends Users {
         this.sessions.add(session);
     }
 
-    public Trainee( Date subscriptionStart, Date endOFSubscription) {
+    public Trainee(Date subscriptionStart, Date endOFSubscription) {
         SubscriptionStart = subscriptionStart;
         this.endOFSubscription = endOFSubscription;
     }

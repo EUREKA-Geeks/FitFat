@@ -66,6 +66,13 @@ public class Gym {
         this.openHours = openHours;
     }
 
+    public Gym(String name, ArrayList<String> location, String phoneNumber, ArrayList<String> features) {
+        this.name = name;
+        this.location = location;
+        this.phoneNumber = phoneNumber;
+        this.features = features;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

@@ -71,7 +71,6 @@ public class TraineeController {
     @PostMapping("/signup")
     public String signupTrainee(@RequestBody Trainee trainee) {
         System.out.println(trainee);
-        trainee.setPassword(new BCryptPasswordEncoder().encode(trainee.getPassword()));
         traineeRepository.save(trainee);
         return "yes";
     }

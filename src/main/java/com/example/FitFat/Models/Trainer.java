@@ -71,12 +71,12 @@ public class Trainer extends Users {
         this.price = price;
     }
 
-    public Trainer(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber) {
-        super(username, password, firstName, lastName, DOB, email, phoneNumber);
+    public Trainer(String name, String email, String phoneNumber, String img) {
+        super(name, email, phoneNumber, img);
     }
 
-    public Trainer(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber, String bio, String education, String specialTraining, String experience, Gym gym, String availability, List<Trainee> trainee, List<Session> session, int price) {
-        super(username, password, firstName, lastName, DOB, email, phoneNumber);
+    public Trainer(String name, String email, String phoneNumber, String img, String bio, String education, String specialTraining, String experience, Gym gym, String availability, List<Trainee> trainee, List<Session> session, int price) {
+        super(name, email, phoneNumber, img);
         this.bio = bio;
         this.education = education;
         this.specialTraining = specialTraining;
