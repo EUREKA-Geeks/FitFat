@@ -3,15 +3,13 @@ package com.example.FitFat.Controller;
 import com.example.FitFat.Models.*;
 import com.example.FitFat.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Calendar;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -73,6 +71,8 @@ public class TraineeController {
     @PostMapping("/signup")
     public String signupTrainee(@RequestBody Trainee trainee) {
         System.out.println(trainee);
+        trainee.setPassword(new BCryptPasswordEncoder().encode(trainee.getPassword()));
+        traineeRepository.save(trainee);
         return "yes";
     }
 

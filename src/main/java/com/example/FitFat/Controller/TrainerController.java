@@ -10,19 +10,15 @@ import com.example.FitFat.Repositories.TraineeRepository;
 import com.example.FitFat.Repositories.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/trainers")
+@RequestMapping("/trainer")
 public class TrainerController {
     @Autowired
     TrainerRepository trainerRepository;
@@ -73,6 +69,12 @@ public class TrainerController {
         Trainer trainer = new Trainer();
         return trainer.getTrainee();
     }
-
+    @PostMapping("/signupTraniner")
+    public String signupTrainer(@RequestBody Trainer trainer) {
+//        System.out.println(trainer);
+        trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
+        trainerRepository.save(trainer);
+        return "yes";
+    }
 
 }
