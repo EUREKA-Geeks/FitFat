@@ -81,7 +81,7 @@ public class GymController {
     @GetMapping("/remove-trainer")
     public List<Trainer> removeTrainer(@RequestParam (value = "id") Long trainerId){
         Gym gym = new Gym();
-        gym.deleteTrainer(trainerRepository.getById(trainerId));
+//        gym.deleteTrainer(trainerRepository.getById(trainerId));
         return gym.getTrainers();
     }
 
