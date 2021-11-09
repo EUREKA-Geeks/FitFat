@@ -2,6 +2,7 @@ package com.example.FitFat.Models;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -109,8 +110,11 @@ public class Trainee extends Users {
         this.sessions.add(session);
     }
 
-    public Trainee(Date subscriptionStart, Date endOFSubscription) {
-        SubscriptionStart = subscriptionStart;
-        this.endOFSubscription = endOFSubscription;
+    public void subscribe(int length) {
+        Calendar calendar = Calendar.getInstance();
+        this.setSubscriptionStart(Date.valueOf(String.valueOf(calendar)));
+        calendar.add(Calendar.MONTH, length);
+        this.setEndOFSubscription(Date.valueOf(String.valueOf(calendar)));
+
     }
 }

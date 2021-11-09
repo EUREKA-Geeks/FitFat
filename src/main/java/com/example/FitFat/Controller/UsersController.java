@@ -1,4 +1,5 @@
 package com.example.FitFat.Controller;
+
 import com.example.FitFat.Models.Trainee;
 import com.example.FitFat.Models.Trainer;
 import com.example.FitFat.Models.Users;
@@ -26,10 +27,6 @@ public class UsersController {
     @Autowired
     TraineeRepository traineeRepository;
 
-//    @Autowired
-//    PasswordEncoder encoder;
-
-
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
@@ -46,16 +43,13 @@ public class UsersController {
     public ResponseEntity updateFromTraineeToTrainer(@PathVariable String email) {
         Trainee trainee = traineeRepository.findByEmail(email);
         traineeRepository.delete(trainee);
-        trainerRepository.save(new Trainer(trainee.getEmail(),trainee.getImage(), trainee.getName(), trainee.getPhoneNumber()));
-
-
+        trainerRepository.save(new Trainer(trainee.getEmail(), trainee.getImage(), trainee.getName(), trainee.getPhoneNumber()));
         return ResponseEntity.ok(trainee);
     }
 
     @PostMapping("/create")
     public String createUser(@RequestBody Trainee trainee) {
         traineeRepository.save(trainee);
-
         System.out.println(trainee);
         return "yes";
 

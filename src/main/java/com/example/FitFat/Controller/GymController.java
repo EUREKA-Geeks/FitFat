@@ -33,109 +33,162 @@ public class GymController {
     @Autowired
     private GymRepository gymRepository;
 
-    @PostMapping("/add-announcement")
-    public ResponseEntity addAnnouncement(@RequestBody String body,
-                                          @RequestBody Trainer trainer,
-                                          @RequestBody Gym gym){
-
-
-        Announcement announcement = new Announcement(body, trainer);
-        announcement.setGym(gym);
-        announcementRepository.save(announcement);
-        return ResponseEntity.ok(announcement);
+    @PostMapping("/add-announcement/{name}")
+    public ResponseEntity addAnnouncement(@RequestBody Announcement announcement, @PathVariable String name) {
+        try {
+            Gym gym = gymRepository.findGymByName(name);
+            announcement.setGym(gym);
+            announcementRepository.save(announcement);
+            return ResponseEntity.ok().body(announcement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was an error");
+        }
     }
 
-    @GetMapping("/remove-announcement")
-    public List<Announcement> removeAnnouncement(@RequestParam (value = "id") Long announcementId){
-        Gym gym = new Gym();
-        gym.deleteAnnouncement(announcementRepository.getById(announcementId));
-        return gym.getAnnouncement();
-    }
+    @DeleteMapping("/remove-announcement/{id}")
+    public ResponseEntity removeAnnouncement(@PathVariable String name, @PathVariable Long id) {
+        try {
+            announcementRepository.deleteById(id);
+            return ResponseEntity.ok().body("Deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
 
 
-    @PostMapping("/add-session")
-    public ResponseEntity addSession(@RequestBody Gym gym,
-                                     @RequestBody Session session){
-        Session session1 = session;
-        session1.setGym(gym);
-        sessionRepository.save(session1);
-        return  ResponseEntity.ok(session1);
-    }
-
-    @GetMapping("/remove-session")
-    public List<Session> removeSession(@RequestParam (value = "id") Long sessionId){
-        Gym gym = new Gym();
-        gym.deleteSession(sessionRepository.getById(sessionId));
-        return gym.getSessions();
-    }
-
-    @PostMapping("/add-trainer")
-    public ResponseEntity addTrainer(@RequestBody Trainer trainer,
-                                     @RequestBody Gym gym){
-        Trainer trainer1 = trainer;
-        trainer1.setGym(gym);
-        trainerRepository.save(trainer1);
-        return ResponseEntity.ok(trainer1);
-    }
-
-    @GetMapping("/remove-trainer")
-    public List<Trainer> removeTrainer(@RequestParam (value = "id") Long trainerId){
-        Gym gym = new Gym();
-//        gym.deleteTrainer(trainerRepository.getById(trainerId));
-        return gym.getTrainers();
     }
 
 
+    @PostMapping("/add-session/{name}")
+    public ResponseEntity addSession(@PathVariable String name,
+                                     @RequestBody Session session) {
+        try {
+            Gym gym = gymRepository.findGymByName(name);
+            session.setGym(gym);
+            sessionRepository.save(session);
+            return ResponseEntity.ok(session);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was an error ");
+        }
 
-    @PostMapping("/add-trainee")
-    public ResponseEntity addTrainee(@RequestBody Trainee trainee,
-                                     @RequestBody Gym gym){
-        Trainee trainee1 = trainee;
-        trainee.setGym(gym);
-        traineeRepository.save(trainee1);
-        return ResponseEntity.ok(trainee1);
     }
 
-    @GetMapping("/remove-trainee")
-    public List<Trainee> removeTrainee(@RequestParam (value = "id") Long traineeId){
-        Gym gym = new Gym();
-        gym.deleteTrainee(traineeRepository.getById(traineeId));
-        return gym.getTrainees();
+    @DeleteMapping("/remove-session/{id}")
+    public ResponseEntity removeSession(Long id) {
+        try {
+            sessionRepository.deleteById(id);
+            return ResponseEntity.ok().body("Deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was an error");
+        }
+    }
+
+    @PostMapping("/add-trainer/{name}/{email}")
+    public ResponseEntity addTrainer(@PathVariable String email, @PathVariable String name) {
+        try {
+            Trainer trainer = trainerRepository.findUserByEmail(email);
+            trainer.setGym(gymRepository.findGymByName(name));
+            trainerRepository.save(trainer);
+            return ResponseEntity.ok(trainer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was an error");
+        }
+
+    }
+
+    @DeleteMapping("/remove-trainer/{email}")
+    public ResponseEntity removeTrainer(@PathVariable String email) {
+        try {
+            Trainer trainer = trainerRepository.findUserByEmail(email);
+            trainer.setGym(null);
+            trainerRepository.save(trainer);
+            return ResponseEntity.ok("Yes");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Not Found");
+        }
+    }
+
+
+    @PostMapping("/add-trainee/{name}/{email}")
+    public ResponseEntity addTrainee(@PathVariable String name, @PathVariable String email) {
+        try {
+            Trainee trainee = traineeRepository.findByEmail(email);
+            Gym gym = gymRepository.findGymByName(name);
+            trainee.setGym(gym);
+            traineeRepository.save(trainee);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Not found");
+        }
+    }
+
+    @GetMapping("/remove-trainee/{email}")
+    public ResponseEntity removeTrainee(@PathVariable String email) {
+        try {
+            Trainee trainee = traineeRepository.findByEmail(email);
+            trainee.setGym(null);
+            traineeRepository.save(trainee);
+            return ResponseEntity.ok("Removed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Not Found");
+        }
     }
 
     // list trainees
-    @GetMapping("/all-trainees")
-    public List<Trainee> getTrainees(){
-        Gym gym = new Gym();
-        return gym.getTrainees();
+    @GetMapping("/all-trainees/{name}")
+    public List<Trainee> getTrainees(@PathVariable String name) {
+        return gymRepository.findGymByName(name).getTrainees();
     }
 
     // list trainers
-    @GetMapping("/all-trainers")
-    public List<Trainer> getTrainers(){
-        Gym gym = new Gym();
-        return gym.getTrainers();
+    @GetMapping("/all-trainers/{name}")
+    public List<Trainer> getTrainers(@PathVariable String name) {
+        return gymRepository.findGymByName(name).getTrainers();
     }
 
-    @PutMapping("/update-gym")
-    public ResponseEntity updateGym(@RequestBody Gym gym){
-        Gym gym1 = new Gym();
-        gymRepository.save(gym1);
-        return ResponseEntity.ok(gym1);
+    @PutMapping("/update-gym/{name}")
+    public ResponseEntity updateGym(@RequestBody Gym gym, @PathVariable String name) {
+        try {
+            Gym gym1 = gymRepository.findGymByName(name);
+            gym1 = gym;
+            gymRepository.save(gym1);
+            return ResponseEntity.ok().body("Updated");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Not working");
+        }
     }
 
-    @PutMapping ("/update-subscription")
-    public ResponseEntity updateSubscription(@RequestParam Date subscriptionStart,
-                                             @RequestParam Date endOFSubscription){
-        Trainee trainee = new Trainee(subscriptionStart, endOFSubscription);
-        traineeRepository.save(trainee);
-        return ResponseEntity.ok(trainee);
+    @PutMapping("/update-subscription/{email}/{len}")
+    public ResponseEntity updateSubscription(@PathVariable String email, @PathVariable int len) {
+        try {
+            Trainee trainee = traineeRepository.findByEmail(email);
+            trainee.subscribe(len);
+            traineeRepository.save(trainee);
+            return ResponseEntity.ok(trainee);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was an error");
+        }
     }
 
-    @PostMapping ("add-admin")
-    public ResponseEntity addAdmin(@RequestParam List<Users> admin){
-        Gym gym = new Gym();
-        gymRepository.save(gym);
-        return ResponseEntity.ok(gym);
+    @PostMapping("add-admin/{name}/{email}")
+    public ResponseEntity addAdmin(@PathVariable String name, @PathVariable String email) {
+        try {
+            Users users = usersRepository.findByEmail(email);
+            users.setGym(gymRepository.findGymByName(name));
+            return ResponseEntity.ok().body("Added gym");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("No");
+        }
     }
+
 }

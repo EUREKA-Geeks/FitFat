@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     Trainee findUserById(Long id);
 
-    Trainee findByemail(String email);
+    Trainee findByEmail(String email);
 }

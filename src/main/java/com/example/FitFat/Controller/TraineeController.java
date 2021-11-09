@@ -4,6 +4,7 @@ import com.example.FitFat.Models.*;
 import com.example.FitFat.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -30,77 +31,50 @@ public class TraineeController {
     SessionRepository sessionRepository;
 
 
-
-
     @GetMapping("/profile")
-    public Trainee getProfile(@RequestBody String email) {
-        Trainee traineeProfile = traineeRepository.findByemail(email);
+    public ResponseEntity getProfile(@RequestBody String email) {
+
 
         try {
-            return traineeProfile;
+            Trainee traineeProfile = traineeRepository.findByEmail(email);
+            return ResponseEntity.ok(traineeProfile);
 
 
         } catch (Exception e) {
-            return traineeProfile;
+            return ResponseEntity.badRequest().body("Not found");
         }
 
     }
 
-    //to let the loggedin user to see the other profile
-//    @GetMapping("/profile/{id}")
-//    public String getProfileByID(@PathVariable Long id,String email) {
-//
-//        try {
-//
-//            Trainee traineeProfile = traineeRepository.findByemail(email);
-//            Users owner = usersRepository.findUserById(id);
-//
-//
-
-//            return "yes";
-//
-//
-//        } catch (Exception e) {
-//        }
-//
-//
-//    }
-
 
     @PostMapping("/signup")
-    public String signupTrainee(@RequestBody Trainee trainee) {
-        System.out.println(trainee);
-        traineeRepository.save(trainee);
-        return "yes";
+    public ResponseEntity signupTrainee(@RequestBody Trainee trainee) {
+        try {
+            System.out.println(trainee);
+            traineeRepository.save(trainee);
+            return ResponseEntity.ok("Created");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Duplicate email");
+        }
     }
 
     //adding new gym to trainee
-    @PostMapping("/gym")
-    //    public Gym(String name, ArrayList<String> location, String phoneNumber, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours) {
-    public Object subscribeToOneGym( @RequestBody Gym gym, String email
-//                                    @RequestParam(value = "name") String name,
-//                                    @RequestParam(value = "location") ArrayList<String> location,
-//                                    @RequestParam(value = "phoneNumber") String phoneNumber,
-//                                    @RequestParam(value = "features") ArrayList<String> features,
-//                                    @RequestParam(value = "trainees") List<Trainee> trainees,
-//                                    @RequestParam(value = "trainers") List<Trainer> trainers,
-//                                    @RequestParam(value = "openHours") ArrayList<String> openHours
+    @PostMapping("/gym/{name}/{email}/{len}")
+    public ResponseEntity subscribeToOneGym(@PathVariable String name, @PathVariable String email, @PathVariable int len
     ) {
-
-        Trainee loggedTrainee = traineeRepository.findByemail(email);
-
         try {
-            loggedTrainee.setGym(gym);
-            Calendar calendar = Calendar.getInstance();
-            loggedTrainee.setSubscriptionStart(java.sql.Date.valueOf(String.valueOf(calendar)));
-            calendar.add(Calendar.MONTH, 1);
-            loggedTrainee.setEndOFSubscription(java.sql.Date.valueOf(String.valueOf(calendar)));
+            Trainee loggedTrainee = traineeRepository.findByEmail(email);
+            loggedTrainee.setGym(gymRepository.findGymByName(name));
+            loggedTrainee.subscribe(len);
             traineeRepository.save(loggedTrainee);
 
-            return loggedTrainee;
+            return ResponseEntity.ok("Subs");
 
         } catch (Exception e) {
-            return "you are not allowed to add this gym";
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Can't subs");
 
         }
 
@@ -108,96 +82,72 @@ public class TraineeController {
 
 
     //to delete a gym
-    @DeleteMapping("/deleteGym/{gym}")
-    public Object deleteSubscribe(@RequestParam(value = "gym") Gym gym, String email) {
+    @DeleteMapping("/deleteGym/{email}")
+    public ResponseEntity deleteSubscribe(@PathVariable String email) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByemail(email);
+            Trainee loggedTrainee = traineeRepository.findByEmail(email);
             loggedTrainee.setGym(null);
             loggedTrainee.setSubscriptionStart(null);
             loggedTrainee.setEndOFSubscription(null);
             traineeRepository.save(loggedTrainee);
-            return loggedTrainee;
-
-
+            return ResponseEntity.ok("UnSubs");
         } catch (Exception e) {
-            return "cant delete the gym";
+            return ResponseEntity.ok().body("You are not a member");
         }
 
     }
 
-    //to add a trainer to trainee
-    @PostMapping("/trainer")
-    public Object subscribeToTrainer( @RequestBody Trainer trainer,String email
-//                                     @RequestParam(value = "specialTraining") String specialTraining,
-//                                     @RequestParam(value = "experience") String experience,
-//                                     @RequestParam(value = "gym") Gym gym,
-//                                     @RequestParam(value = "availability") String availability,
-//                                     @RequestParam(value = "trainee") List<Trainee> trainee,
-//                                     @RequestParam(value = "session") List<Session> session,
-//                                     @RequestParam(value = "price") int price
-    ) {
 
-
+    @PostMapping("/trainer/{trainerEmail}/{traineeEmail}")
+    public ResponseEntity subscribeToTrainer(@PathVariable String trainerEmail, @PathVariable String traineeEmail) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByemail(email);
-            loggedTrainee.setTrainer(trainer);
-            traineeRepository.save(loggedTrainee);
-            return loggedTrainee;
+            Trainee trainee = traineeRepository.findByEmail(traineeEmail);
+            trainee.setTrainer(trainerRepository.findUserByEmail(trainerEmail));
+            traineeRepository.save(trainee);
+            return ResponseEntity.ok("Added");
 
         } catch (Exception e) {
-            return "you are not allowed";
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("You are not allowed");
 
         }
 
     }
-    //to delete a trainer to trainee
 
-    @DeleteMapping("/delete/{trainer}")
-//    @ResponseBody
-    public Object deleteTrainer(@RequestParam(value = "trainer") Trainer trainer, String email) {
+
+    @DeleteMapping("/delete/{trainee}")
+    public ResponseEntity deleteTrainer(@PathVariable String trainee) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByemail(email);
+            Trainee loggedTrainee = traineeRepository.findByEmail(trainee);
             loggedTrainee.setTrainer(null);
             traineeRepository.save(loggedTrainee);
-            return loggedTrainee;
+            return ResponseEntity.ok("Deleted");
 
 
         } catch (Exception e) {
-            return "cant delete the trainer";
+            return ResponseEntity.badRequest().body("You can't");
         }
 
     }
 
-    // to add a session to trainee
-    @PostMapping("/session")
-    public Object bookSession(String email, @RequestBody Session session
-//                              @RequestParam(value = "capacity") int capacity,
-//                              @RequestParam(value = "type") String type,
-//                              @RequestParam(value = "day") Date day,
-//                              @RequestParam(value = "location") String location,
-//                              @RequestParam(value = "trainer") Trainer trainer,
-//                              @RequestParam(value = "trainee") List<Trainee> trainee
-    ) {
+
+    @PostMapping("/session/{id}/{email}")
+    public ResponseEntity bookSession(@PathVariable Long id, @PathVariable String email) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByemail(email);
-            loggedTrainee.addSession(session);
+            Trainee loggedTrainee = traineeRepository.findByEmail(email);
+            loggedTrainee.addSession(sessionRepository.getById(id));
             traineeRepository.save(loggedTrainee);
-//            Session sessionsList = sessions.;
-
-            return loggedTrainee;
-
-
+            return ResponseEntity.ok("Subs");
         } catch (Exception e) {
-            return "the session not found";
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("There was a problem");
         }
-
-
     }
 
-    //to see the trainee subscription start - end
-    @GetMapping("subs")
-    public String getSubTime(@RequestBody String email) {
-        Trainee trainee = traineeRepository.findByemail(email);
+
+    @GetMapping("/subs")
+    public String getSubTime(@PathVariable String email) {
+        Trainee trainee = traineeRepository.findByEmail(email);
         return String.valueOf(trainee.getSubscriptionStart());
     }
 

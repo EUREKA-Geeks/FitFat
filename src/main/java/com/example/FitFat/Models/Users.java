@@ -39,7 +39,7 @@ public abstract class Users {
 
     private String image;
     @ManyToOne
-    @JoinColumn(name = "gym_id")
+    @JoinColumn(name = "gym_id_admin")
     private Gym gym;
 
     public Gym getGym() {

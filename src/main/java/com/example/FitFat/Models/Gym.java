@@ -52,7 +52,7 @@ public class Gym {
         this.admin = admin;
     }
 
-    public Gym(List<Users> admin){
+    public Gym(List<Users> admin) {
         this.admin = admin;
     }
 
@@ -176,11 +176,26 @@ public class Gym {
     public void setId(Long id) {
         this.id = id;
     }
-    public void deleteTrainer(Trainer trainer){this.trainers.remove(trainer);}
-    public void deleteTrainee(Trainee trainee){this.trainees.remove(trainee);}
-    public void deleteAnnouncement(Announcement announcement){this.announcement.remove(announcement);}
-    public void deleteSession(Session session){this.sessions.remove(session);}
-    public void updateGym(){}
+
+    public void deleteTrainer(Trainer trainer) {
+        this.trainers.remove(trainer);
+    }
+
+    public void deleteTrainee(Trainee trainee) {
+        this.trainees.remove(trainee);
+    }
+
+    public void deleteAnnouncement(Announcement announcement) {
+        this.announcement.remove(announcement);
+    }
+
+    public void deleteSession(Session session) {
+        this.sessions.remove(session);
+    }
+
+    public void updateGym() {
+    }
+
     public Gym() {
     }
 }
