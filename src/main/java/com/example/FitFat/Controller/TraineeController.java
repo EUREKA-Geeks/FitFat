@@ -3,9 +3,7 @@ package com.example.FitFat.Controller;
 import com.example.FitFat.Models.*;
 import com.example.FitFat.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -32,41 +30,41 @@ public class TraineeController {
     SessionRepository sessionRepository;
 
 
-    @Autowired
-    PasswordEncoder encoder;
+
 
     @GetMapping("/profile")
-    public String getProfile(Model model, Principal principal) {
+    public Trainee getProfile(@RequestBody String email) {
+        Trainee traineeProfile = traineeRepository.findByemail(email);
+
         try {
-            Trainee profile = traineeRepository.findByUsername(principal.getName());
-            model.addAttribute("profile", profile);
-            return "yes";
+            return traineeProfile;
+
+
         } catch (Exception e) {
-            return "profile is not exist";
+            return traineeProfile;
         }
 
     }
 
     //to let the loggedin user to see the other profile
-    @GetMapping("/profile/{id}")
-    public String getProfileByID(@PathVariable Long id, Principal principal, Model model) {
-
-        try {
-
-            Trainee traineeProfile = traineeRepository.findByUsername(principal.getName());
-            Users owner = usersRepository.findUserById(id);
-            model.addAttribute("visitor", traineeProfile);
-            model.addAttribute("owner", owner);
-
-            return "yes";
-
-
-        } catch (Exception e) {
-            return "the profile is not exist";
-        }
-
-
-    }
+//    @GetMapping("/profile/{id}")
+//    public String getProfileByID(@PathVariable Long id,String email) {
+//
+//        try {
+//
+//            Trainee traineeProfile = traineeRepository.findByemail(email);
+//            Users owner = usersRepository.findUserById(id);
+//
+//
+//            return "yes";
+//
+//
+//        } catch (Exception e) {
+//            return "the profile is not exist";
+//        }
+//
+//
+//    }
 
     @PostMapping("/signup")
     public String signupTrainee(@RequestBody Trainee trainee) {
@@ -78,7 +76,7 @@ public class TraineeController {
     //adding new gym to trainee
     @PostMapping("/gym")
     //    public Gym(String name, ArrayList<String> location, String phoneNumber, ArrayList<String> features, List<Trainee> trainees, List<Trainer> trainers, ArrayList<String> openHours) {
-    public String subscribeToOneGym(Principal principal, @RequestBody Gym gym
+    public Object subscribeToOneGym( @RequestBody Gym gym, String email
 //                                    @RequestParam(value = "name") String name,
 //                                    @RequestParam(value = "location") ArrayList<String> location,
 //                                    @RequestParam(value = "phoneNumber") String phoneNumber,
@@ -88,8 +86,9 @@ public class TraineeController {
 //                                    @RequestParam(value = "openHours") ArrayList<String> openHours
     ) {
 
+        Trainee loggedTrainee = traineeRepository.findByemail(email);
+
         try {
-            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
             loggedTrainee.setGym(gym);
             Calendar calendar = Calendar.getInstance();
             loggedTrainee.setSubscriptionStart(java.sql.Date.valueOf(String.valueOf(calendar)));
@@ -97,10 +96,10 @@ public class TraineeController {
             loggedTrainee.setEndOFSubscription(java.sql.Date.valueOf(String.valueOf(calendar)));
             traineeRepository.save(loggedTrainee);
 
-            return "yes";
+            return loggedTrainee;
 
         } catch (Exception e) {
-            return "you are not allowed";
+            return "you are not allowed to add this gym";
 
         }
 
@@ -108,15 +107,15 @@ public class TraineeController {
 
 
     //to delete a gym
-    @DeleteMapping("/deleteGym/{id}")
-//    @ResponseBody
-    public String deleteSubscribe(@PathVariable Long id, Principal principal) {
+    @DeleteMapping("/deleteGym/{gym}")
+    public Object deleteSubscribe(@RequestParam(value = "gym") Gym gym, String email) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
+            Trainee loggedTrainee = traineeRepository.findByemail(email);
             loggedTrainee.setGym(null);
             loggedTrainee.setSubscriptionStart(null);
             loggedTrainee.setEndOFSubscription(null);
-            return "yes";
+            traineeRepository.save(loggedTrainee);
+            return loggedTrainee;
 
 
         } catch (Exception e) {
@@ -127,7 +126,7 @@ public class TraineeController {
 
     //to add a trainer to trainee
     @PostMapping("/trainer")
-    public String subscribeToTrainer(Principal principal, @RequestBody Trainer trainer
+    public Object subscribeToTrainer( @RequestBody Trainer trainer,String email
 //                                     @RequestParam(value = "specialTraining") String specialTraining,
 //                                     @RequestParam(value = "experience") String experience,
 //                                     @RequestParam(value = "gym") Gym gym,
@@ -139,10 +138,10 @@ public class TraineeController {
 
 
         try {
-            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
+            Trainee loggedTrainee = traineeRepository.findByemail(email);
             loggedTrainee.setTrainer(trainer);
             traineeRepository.save(loggedTrainee);
-            return "yes";
+            return loggedTrainee;
 
         } catch (Exception e) {
             return "you are not allowed";
@@ -152,14 +151,14 @@ public class TraineeController {
     }
     //to delete a trainer to trainee
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{trainer}")
 //    @ResponseBody
-    public String deleteTrainer(@PathVariable Long id, Principal principal) {
+    public Object deleteTrainer(@RequestParam(value = "trainer") Trainer trainer, String email) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
+            Trainee loggedTrainee = traineeRepository.findByemail(email);
             loggedTrainee.setTrainer(null);
             traineeRepository.save(loggedTrainee);
-            return "yes";
+            return loggedTrainee;
 
 
         } catch (Exception e) {
@@ -170,7 +169,7 @@ public class TraineeController {
 
     // to add a session to trainee
     @PostMapping("/session")
-    public String bookSession(Principal principal, @RequestBody Session session
+    public Object bookSession(String email, @RequestBody Session session
 //                              @RequestParam(value = "capacity") int capacity,
 //                              @RequestParam(value = "type") String type,
 //                              @RequestParam(value = "day") Date day,
@@ -179,12 +178,12 @@ public class TraineeController {
 //                              @RequestParam(value = "trainee") List<Trainee> trainee
     ) {
         try {
-            Trainee loggedTrainee = traineeRepository.findByUsername(principal.getName());
+            Trainee loggedTrainee = traineeRepository.findByemail(email);
             loggedTrainee.addSession(session);
             traineeRepository.save(loggedTrainee);
 //            Session sessionsList = sessions.;
 
-            return "yes";
+            return loggedTrainee;
 
 
         } catch (Exception e) {
@@ -196,8 +195,8 @@ public class TraineeController {
 
     //to see the trainee subscription start - end
     @GetMapping("subs")
-    public String getSubTime(Principal principal) {
-        Trainee trainee = traineeRepository.findByUsername(principal.getName());
+    public String getSubTime(@RequestBody String email) {
+        Trainee trainee = traineeRepository.findByemail(email);
         return String.valueOf(trainee.getSubscriptionStart());
     }
 
