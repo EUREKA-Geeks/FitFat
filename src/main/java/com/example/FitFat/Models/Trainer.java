@@ -71,12 +71,12 @@ public class Trainer extends Users {
         this.price = price;
     }
 
-    public Trainer(String name,  String email, String phoneNumber) {
-        super(name, email, phoneNumber);
+    public Trainer(String name, String email, String phoneNumber, String img) {
+        super(name, email, phoneNumber, img);
     }
 
-    public Trainer(String name, String email, String phoneNumber, String bio, String education, String specialTraining, String experience, Gym gym, String availability, List<Trainee> trainee, List<Session> session, int price) {
-        super(name, email, phoneNumber);
+    public Trainer(String name, String email, String phoneNumber, String img, String bio, String education, String specialTraining, String experience, Gym gym, String availability, List<Trainee> trainee, List<Session> session, int price) {
+        super(name, email, phoneNumber, img);
         this.bio = bio;
         this.education = education;
         this.specialTraining = specialTraining;
@@ -158,6 +158,12 @@ public class Trainer extends Users {
     public void setPrice(int price) {
         this.price = price;
     }
-    public void addSession(Session session){this.session.add(session);}
-    public void deleteTrainee(Trainee trainee){this.trainee.remove(trainee);}
+
+    public void addSession(Session session) {
+        this.session.add(session);
+    }
+
+    public void deleteTrainee(Trainee trainee) {
+        this.trainee.remove(trainee);
+    }
 }

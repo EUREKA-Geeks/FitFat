@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/trainer")
 public class TrainerController {
@@ -35,11 +35,11 @@ public class TrainerController {
 
     // Trainer can add announcement
     @PostMapping("/addAnnouncement")
-    public ResponseEntity addAnnouncement(Principal principal, @RequestParam String body){
+    public ResponseEntity addAnnouncement(Principal principal, @RequestParam String body) {
         // just to avoid conflict I add another constructor At the end of Announcement model .
         // I add findByUsername method in trainerRepository
-        Trainer trainer= trainerRepository.findByUsername(principal.getName());
-        Announcement newAnnouncement= new Announcement(body,trainer);
+        Trainer trainer = trainerRepository.findByUsername(principal.getName());
+        Announcement newAnnouncement = new Announcement(body, trainer);
         trainer.announcements.add(newAnnouncement);
         announcementRepository.save(newAnnouncement);
         return ResponseEntity.ok(newAnnouncement);
@@ -47,16 +47,16 @@ public class TrainerController {
 
     //Trainer can add sessions
     @GetMapping("/Addsession")
-    public List<Session> sessionList(@RequestParam(value="id") Long sessionID){
+    public List<Session> sessionList(@RequestParam(value = "id") Long sessionID) {
         Trainer trainer = new Trainer();
         // create add to session method in Trainer model
-        trainer.addSession( sessionRepository.findById(sessionID).get());
+        trainer.addSession(sessionRepository.findById(sessionID).get());
         return trainer.getSession();
     }
 
     // A trainer can remove one of his Trainee
     @GetMapping("/removeTrainee")
-    public List<Trainee> removeTrainee(@RequestParam(value="id") Long traineeID){
+    public List<Trainee> removeTrainee(@RequestParam(value = "id") Long traineeID) {
         Trainer trainer = new Trainer();
         // create add to session method in Trainer model
         trainer.deleteTrainee(traineeRepository.findById(traineeID).get());
@@ -65,14 +65,15 @@ public class TrainerController {
 
     //Trainer can list his/her trainee
     @GetMapping("/allTrainee")
-    public List<Trainee> GetAllTrainee(){
+    public List<Trainee> GetAllTrainee() {
         Trainer trainer = new Trainer();
         return trainer.getTrainee();
     }
+
     @PostMapping("/signupTraniner")
     public String signupTrainer(@RequestBody Trainer trainer) {
 //        System.out.println(trainer);
-        trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
+//        trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
         trainerRepository.save(trainer);
         return "yes";
     }
