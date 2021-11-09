@@ -1,11 +1,13 @@
 package com.example.FitFat.Security;
 
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.example.FitFat.Models.Gym;
 import com.example.FitFat.Models.Trainee;
 import com.example.FitFat.Models.Trainer;
 import com.example.FitFat.Models.Users;
@@ -15,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
@@ -30,6 +34,9 @@ public class UserDetailsImpl implements UserDetails {
 
     private String firstName;
     private String lastName;
+    private Date DOB;
+    private String phoneNumber;
+    private Gym gym;
 
 
     public UserDetailsImpl(Long id, String username, String email, String password, String firstName,
@@ -42,14 +49,29 @@ public class UserDetailsImpl implements UserDetails {
         this.lastName = lastName;
     }
 
-    public static UserDetailsImpl build(Trainer user) {
+    public UserDetailsImpl(Long id, String username, String email, String password, String firstName, String lastName, Date DOB, String phoneNumber, Gym gym) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.DOB = DOB;
+        this.phoneNumber = phoneNumber;
+        this.gym = gym;
+    }
+
+    public static UserDetailsImpl build(Users user) {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getLastName(),
+                user.getDOB(),
+                user.getPhoneNumber(),
+                user.getGym()
         );
     }
 
@@ -115,4 +137,15 @@ public class UserDetailsImpl implements UserDetails {
     }
 
 
+    public Date getDOB() {
+        return DOB;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public Gym getGym() {
+        return gym;
+    }
 }

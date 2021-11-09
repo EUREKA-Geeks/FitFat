@@ -92,6 +92,12 @@ public class GymAdminController {
         } catch (Exception e) {
             System.out.println("Trainee");
         }
+        try {
+            Users dima = new Users("dima", encoder.encode("123456"), "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmm", "0789");
+            usersRepository.save(dima);
+        } catch (Exception e) {
+            System.out.println("dima");
+        }
 //        try {
 //            GymAdmin gymAdmin1 = new GymAdmin("mawmoon", "123456", "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmaaawwwwaam", "0758");
 //            gymAdminRepository.save(gymAdmin1);
