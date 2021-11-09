@@ -158,6 +158,12 @@ public class Trainer extends Users {
     public void setPrice(int price) {
         this.price = price;
     }
-    public void addSession(Session session){this.session.add(session);}
-    public void deleteTrainee(Trainee trainee){this.trainee.remove(trainee);}
+
+    public void addSession(Session session) {
+        this.session.add(session);
+    }
+
+    public void deleteTrainee(Trainee trainee) {
+        this.trainee.remove(trainee);
+    }
 }

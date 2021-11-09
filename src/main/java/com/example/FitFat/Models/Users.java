@@ -9,23 +9,23 @@ import java.util.Collection;
 
 @Table(name = "users")
 @Entity
-public class Users {
+public abstract class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(unique = true, nullable = false)
     private String username;
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String lastName;
     private Date DOB;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column(unique = true)
+    //    @Column(unique = true)
     private String phoneNumber;
 
     @ManyToOne
@@ -52,6 +52,16 @@ public class Users {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
+    public Users(String username, String email) {
+        this.username = username;
+        this.password = "123456";
+        this.firstName = username;
+        this.lastName = username;
+        this.email = email;
+        this.phoneNumber = "0789072104";
+    }
+
 
     public Long getId() {
         return id;
