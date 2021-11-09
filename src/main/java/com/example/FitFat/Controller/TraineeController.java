@@ -56,15 +56,16 @@ public class TraineeController {
 //            Users owner = usersRepository.findUserById(id);
 //
 //
+
 //            return "yes";
 //
 //
 //        } catch (Exception e) {
-//            return "the profile is not exist";
 //        }
 //
 //
 //    }
+
 
     @PostMapping("/signup")
     public String signupTrainee(@RequestBody Trainee trainee) {
