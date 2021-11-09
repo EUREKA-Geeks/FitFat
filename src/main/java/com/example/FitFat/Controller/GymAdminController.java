@@ -81,19 +81,21 @@ public class GymAdminController {
     @ResponseBody
     public String home() {
         try {
-            Trainer trainer = new Trainer("mamoon", encoder.encode("123456"), "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmm", "0789");
+
+
+            Trainer trainer = new Trainer("mamoun", "mamoun@gmail.com", "0791548848" );
             trainerRepository.save(trainer);
         } catch (Exception e) {
             System.out.println("Trainer");
         }
         try {
-            Trainee trainee = new Trainee("maamoon", "123456", "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmaaaam", "0778");
+            Trainee trainee = new Trainee("maamoon",  "mmaaaam", "0778");
             traineeRepository.save(trainee);
         } catch (Exception e) {
             System.out.println("Trainee");
         }
         try {
-            Users dima = new Users("dima", encoder.encode("123456"), "mamoon", "huseein", Date.valueOf(LocalDate.now()), "mmm", "0789");
+            Users dima = new Users("dima",  "mmm", "0789", "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
             usersRepository.save(dima);
         } catch (Exception e) {
             System.out.println("dima");

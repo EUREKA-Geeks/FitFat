@@ -15,19 +15,21 @@ public class Users {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(unique = true, nullable = false)
-    private String username;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String lastName;
-    private Date DOB;
+    private String name;
     @Column(unique = true, nullable = false)
     private String email;
     @Column(unique = true)
     private String phoneNumber;
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    private String image;
     @ManyToOne
     @JoinColumn(name = "gym_id")
     private Gym gym;
@@ -43,14 +45,11 @@ public class Users {
     public Users() {
     }
 
-    public Users(String username, String password, String firstName, String lastName, Date DOB, String email, String phoneNumber) {
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.DOB = DOB;
+    public Users(String name,  String email, String phoneNumber, String image) {
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.image = image;
     }
 
     public Long getId() {
@@ -71,9 +70,6 @@ public class Users {
 //        return password;
 //    }
 
-    public String getUsername() {
-        return username;
-    }
 
 //    @Override
 //    public boolean isAccountNonExpired() {
@@ -95,43 +91,6 @@ public class Users {
 //        return true;
 //    }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Date getDOB() {
-        return DOB;
-    }
-
-    public void setDOB(Date DOB) {
-        this.DOB = DOB;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -148,15 +107,12 @@ public class Users {
         this.phoneNumber = phoneNumber;
     }
 
+
     @Override
     public String toString() {
         return "Users{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", DOB=" + DOB +
+                ", username='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';

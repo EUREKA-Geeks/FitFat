@@ -34,9 +34,9 @@ public class GymController {
     private GymRepository gymRepository;
 
     @PostMapping("/add-announcement")
-    public ResponseEntity addAnnouncement(@RequestParam String body,
-                                          @RequestParam Trainer trainer,
-                                          @RequestParam Gym gym){
+    public ResponseEntity addAnnouncement(@RequestBody String body,
+                                          @RequestBody Trainer trainer,
+                                          @RequestBody Gym gym){
 
 
         Announcement announcement = new Announcement(body, trainer);
@@ -52,18 +52,14 @@ public class GymController {
         return gym.getAnnouncement();
     }
 
+
     @PostMapping("/add-session")
-    public ResponseEntity addSession(@RequestParam int capacity,
-                                     @RequestParam String type,
-                                     @RequestParam Date day,
-                                     @RequestParam String location,
-                                     @RequestParam Trainer trainer,
-                                     @RequestParam List<Trainee> trainees,
-                                     @RequestParam Gym gym){
-        Session session = new Session(capacity, type, day, location, trainer, trainees, gym);
-        session.setGym(gym);
-        sessionRepository.save(session);
-        return ResponseEntity.ok(session);
+    public ResponseEntity addSession(@RequestBody Gym gym,
+                                     @RequestBody Session session){
+        Session session1 = session;
+        session1.setGym(gym);
+        sessionRepository.save(session1);
+        return  ResponseEntity.ok(session1);
     }
 
     @GetMapping("/remove-session")
@@ -74,26 +70,12 @@ public class GymController {
     }
 
     @PostMapping("/add-trainer")
-    public ResponseEntity addTrainer(@RequestParam String username,
-                                     @RequestParam String password,
-                                     @RequestParam String firstName,
-                                     @RequestParam String lastName,
-                                     @RequestParam Date DOB,
-                                     @RequestParam String email,
-                                     @RequestParam String phoneNumber,
-                                     @RequestParam String bio,
-                                     @RequestParam String education,
-                                     @RequestParam String specialTraining,
-                                     @RequestParam String experience,
-                                     @RequestParam Gym gym,
-                                     @RequestParam String availability,
-                                     @RequestParam List<Trainee> trainee,
-                                     @RequestParam List<Session> session,
-                                     @RequestParam int price){
-        Trainer trainer = new Trainer(username, password, firstName, lastName, DOB, email, phoneNumber, bio, education, specialTraining, experience, gym, availability, trainee, session, price);
-        trainer.setGym(gym);
-        trainerRepository.save(trainer);
-        return ResponseEntity.ok(trainer);
+    public ResponseEntity addTrainer(@RequestBody Trainer trainer,
+                                     @RequestBody Gym gym){
+        Trainer trainer1 = trainer;
+        trainer1.setGym(gym);
+        trainerRepository.save(trainer1);
+        return ResponseEntity.ok(trainer1);
     }
 
     @GetMapping("/remove-trainer")
@@ -103,23 +85,15 @@ public class GymController {
         return gym.getTrainers();
     }
 
+
+
     @PostMapping("/add-trainee")
-    public ResponseEntity addTrainee(@RequestParam String username,
-                                     @RequestParam String password,
-                                     @RequestParam String firstName,
-                                     @RequestParam String lastName,
-                                     @RequestParam Date DOB,
-                                     @RequestParam String email,
-                                     @RequestParam String phoneNumber,
-                                     @RequestParam String gender,
-                                     @RequestParam String medicalStatus,
-                                     @RequestParam Date subscriptionStart,
-                                     @RequestParam Date endOFSubscription,
-                                     @RequestParam Gym gym){
-        Trainee trainee = new Trainee(username, password, firstName, lastName, DOB, email, phoneNumber, gender, medicalStatus, subscriptionStart, endOFSubscription);
+    public ResponseEntity addTrainee(@RequestBody Trainee trainee,
+                                     @RequestBody Gym gym){
+        Trainee trainee1 = trainee;
         trainee.setGym(gym);
-        traineeRepository.save(trainee);
-        return ResponseEntity.ok(trainee);
+        traineeRepository.save(trainee1);
+        return ResponseEntity.ok(trainee1);
     }
 
     @GetMapping("/remove-trainee")
@@ -144,21 +118,10 @@ public class GymController {
     }
 
     @PutMapping("/update-gym")
-    public ResponseEntity updateGym(@RequestParam String name,
-                                    @RequestParam ArrayList<String> location,
-                                    @RequestParam String phoneNumber,
-                                    @RequestParam String bio,
-                                    @RequestParam String photo,
-                                    @RequestParam ArrayList<String> features,
-                                    @RequestParam List<Trainee> trainees,
-                                    @RequestParam List<Session> sessions,
-                                    @RequestParam List<Trainer> trainers,
-                                    @RequestParam ArrayList<String> openHours,
-                                    @RequestParam List<Announcement> announcement,
-                                    @RequestParam List<Users> admin){
-        Gym gym = new Gym(name, location, phoneNumber, bio, photo, features, trainees,sessions, trainers, openHours, announcement, admin);
-        gymRepository.save(gym);
-        return ResponseEntity.ok(gym);
+    public ResponseEntity updateGym(@RequestBody Gym gym){
+        Gym gym1 = new Gym();
+        gymRepository.save(gym1);
+        return ResponseEntity.ok(gym1);
     }
 
     @PutMapping ("/update-subscription")
