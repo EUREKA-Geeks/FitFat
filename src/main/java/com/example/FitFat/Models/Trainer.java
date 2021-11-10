@@ -72,11 +72,11 @@ public class Trainer extends Users {
     }
 
     public Trainer(String name, String email, String phoneNumber, String img) {
-        super(name, email, phoneNumber, img);
+        super(name, email, phoneNumber, img, "Trainer");
     }
 
     public Trainer(String name, String email, String phoneNumber, String img, String bio, String education, String specialTraining, String experience, Gym gym, String availability, List<Trainee> trainee, List<Session> session, int price) {
-        super(name, email, phoneNumber, img);
+        super(name, email, phoneNumber, img, "Trainer");
         this.bio = bio;
         this.education = education;
         this.specialTraining = specialTraining;
@@ -166,4 +166,6 @@ public class Trainer extends Users {
     public void deleteTrainee(Trainee trainee) {
         this.trainee.remove(trainee);
     }
+
+
 }

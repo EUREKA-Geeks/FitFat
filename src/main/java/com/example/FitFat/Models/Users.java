@@ -20,6 +20,16 @@ public abstract class Users {
     private String email;
     @Column(unique = true)
     private String phoneNumber;
+    private String role;
+
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getName() {
         return name;
@@ -53,11 +63,12 @@ public abstract class Users {
     public Users() {
     }
 
-    public Users(String name, String email, String phoneNumber, String image) {
+    public Users(String name, String email, String phoneNumber, String image, String role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.image = image;
+        this.role = role;
     }
 
 
@@ -86,5 +97,15 @@ public abstract class Users {
         this.phoneNumber = phoneNumber;
     }
 
-
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", image='" + image + '\'' +
+                ", gym=" + gym +
+                '}';
+    }
 }

@@ -39,6 +39,7 @@ public class GymController {
         try {
             Gym gym = gymRepository.findGymByName(name);
             announcement.setGym(gym);
+            System.out.println("");
             announcementRepository.save(announcement);
             return ResponseEntity.ok().body(announcement);
         } catch (Exception e) {
@@ -192,4 +193,21 @@ public class GymController {
         }
     }
 
+
+    @PostMapping("/addGym")
+    public ResponseEntity addGym(@RequestBody Gym gym) {
+        try {
+            gymRepository.save(gym);
+            return ResponseEntity.ok("Created");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Dublicate Gym Name");
+        }
+    }
+
+
+    @GetMapping("/allGym")
+    public List<Gym> getAllGym() {
+        return gymRepository.findAll();
+    }
 }

@@ -41,10 +41,21 @@ public class UsersController {
     //User can edit his profile
     @PutMapping("/trainee/{email}")
     public ResponseEntity updateFromTraineeToTrainer(@PathVariable String email) {
-        Trainee trainee = traineeRepository.findByEmail(email);
-        traineeRepository.delete(trainee);
-        trainerRepository.save(new Trainer(trainee.getEmail(), trainee.getImage(), trainee.getName(), trainee.getPhoneNumber()));
-        return ResponseEntity.ok(trainee);
+        try {
+            Trainee trainee = traineeRepository.findByEmail(email);
+            System.out.println(trainee);
+            Trainer trainer = new Trainer();
+            trainer.setEmail(trainee.getEmail());
+            trainer.setName(trainee.getName());
+//            System.out.println(trainee.getEmail());
+            traineeRepository.delete(trainee);
+//            System.out.println(trainee.getEmail());
+            trainerRepository.save(trainer);
+            return ResponseEntity.ok(trainee);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("no");
+        }
     }
 
     @PostMapping("/create")

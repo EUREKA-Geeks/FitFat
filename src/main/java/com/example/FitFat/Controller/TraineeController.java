@@ -145,7 +145,7 @@ public class TraineeController {
     }
 
 
-    @GetMapping("/subs")
+    @GetMapping("/subs/{email}")
     public String getSubTime(@PathVariable String email) {
         Trainee trainee = traineeRepository.findByEmail(email);
         return String.valueOf(trainee.getSubscriptionStart());

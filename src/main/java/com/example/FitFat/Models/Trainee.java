@@ -55,11 +55,11 @@ public class Trainee extends Users {
     }
 
     public Trainee(String name, String email, String phoneNumber, String img) {
-        super(name, email, phoneNumber, img);
+        super(name, email, phoneNumber, img, "Trainee");
     }
 
     public Trainee(String name, String email, String phoneNumber, String img, String gender, String medicalStatus, Date subscriptionStart, Date endOFSubscription) {
-        super(name, email, phoneNumber, img);
+        super(name, email, phoneNumber, img, "Trainee");
         this.gender = gender;
         this.medicalStatus = medicalStatus;
         SubscriptionStart = subscriptionStart;
