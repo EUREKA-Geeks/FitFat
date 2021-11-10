@@ -35,16 +35,15 @@ public class TrainerController {
     // Trainer can add announcement
 
     @PostMapping("/add-announcement/{email}")
-    public ResponseEntity addAnnouncement(@PathVariable String email, @RequestBody Announcement announcement ) {
+    public ResponseEntity addAnnouncement(@PathVariable String email, @RequestBody Announcement announcement) {
 //         just to avoid conflict I add another constructor At the end of Announcement model .
 //         I add findByUsername method in trainerRepository
-        try{
+        try {
             Trainer trainer = trainerRepository.findByEmail(email);
             announcement.setTrainer(trainer);
             announcementRepository.save(announcement);
             return ResponseEntity.ok().body(announcement);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("The user is not found");
         }
@@ -54,14 +53,13 @@ public class TrainerController {
     //Trainer can add sessions
     @PostMapping("/add-session/{email}")
     public ResponseEntity sessionList(@PathVariable String email, @RequestBody Session session) {
-        try{
+        try {
             Trainer trainer = trainerRepository.findByEmail(email);
             // create add to session method in Trainer model
             session.setTrainer(trainer);
             sessionRepository.save(session);
             return ResponseEntity.ok().body(session);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("The user is not found");
         }
@@ -82,10 +80,17 @@ public class TrainerController {
         }
 
     }
+
     //Trainer can list his/her trainee
     @GetMapping("/all-trainee/{email}")
     public List<Trainee> GetAllTrainee(@PathVariable String email) {
         return trainerRepository.findByEmail(email).getTrainee();
+    }
+
+
+    @GetMapping("/all")
+    public List<Trainer> allTrainer() {
+        return trainerRepository.findAll();
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Calendar;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -102,7 +103,7 @@ public class TraineeController {
     public ResponseEntity subscribeToTrainer(@PathVariable String trainerEmail, @PathVariable String traineeEmail) {
         try {
             Trainee trainee = traineeRepository.findByEmail(traineeEmail);
-            trainee.setTrainer(trainerRepository.findUserByEmail(trainerEmail));
+            trainee.setTrainer(trainerRepository.findByEmail(trainerEmail));
             traineeRepository.save(trainee);
             return ResponseEntity.ok("Added");
 
@@ -151,5 +152,9 @@ public class TraineeController {
         return String.valueOf(trainee.getSubscriptionStart());
     }
 
+    @GetMapping("/all")
+    public List<Trainee> allTrainee() {
+        return traineeRepository.findAll();
+    }
 
 }

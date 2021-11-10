@@ -91,7 +91,7 @@ public class GymController {
     @PostMapping("/add-trainer/{name}/{email}")
     public ResponseEntity addTrainer(@PathVariable String email, @PathVariable String name) {
         try {
-            Trainer trainer = trainerRepository.findUserByEmail(email);
+            Trainer trainer = trainerRepository.findByEmail(email);
             trainer.setGym(gymRepository.findGymByName(name));
             trainerRepository.save(trainer);
             return ResponseEntity.ok(trainer);
@@ -105,7 +105,7 @@ public class GymController {
     @DeleteMapping("/remove-trainer/{email}")
     public ResponseEntity removeTrainer(@PathVariable String email) {
         try {
-            Trainer trainer = trainerRepository.findUserByEmail(email);
+            Trainer trainer = trainerRepository.findByEmail(email);
             trainer.setGym(null);
             trainerRepository.save(trainer);
             return ResponseEntity.ok("Yes");
@@ -209,5 +209,16 @@ public class GymController {
     @GetMapping("/allGym")
     public List<Gym> getAllGym() {
         return gymRepository.findAll();
+    }
+
+
+    @GetMapping("/allSession")
+    public List<Session> allSession() {
+        return sessionRepository.findAll();
+    }
+
+    @GetMapping("/allAnn")
+    public List<Announcement> allAnn() {
+        return announcementRepository.findAll();
     }
 }
