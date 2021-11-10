@@ -5,7 +5,8 @@ import com.example.FitFat.Models.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
-    Trainer findUserByEmail(String email);
 
-    Trainer findUserById(Long id);
+    Trainer findByEmail(String email);
+
+
 }

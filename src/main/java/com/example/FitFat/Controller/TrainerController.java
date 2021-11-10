@@ -33,48 +33,60 @@ public class TrainerController {
     //// the return type will be changing for methods, no testing
 
     // Trainer can add announcement
-    @PostMapping("/addAnnouncement")
-    public ResponseEntity addAnnouncement(Principal principal, @RequestParam String body) {
-        // just to avoid conflict I add another constructor At the end of Announcement model .
-        // I add findByUsername method in trainerRepository
-        Trainer trainer = new Trainer();
-        Announcement newAnnouncement = new Announcement(body, trainer);
-        trainer.announcements.add(newAnnouncement);
-        announcementRepository.save(newAnnouncement);
-        return ResponseEntity.ok(newAnnouncement);
+
+    @PostMapping("/add-announcement/{email}")
+    public ResponseEntity addAnnouncement(@PathVariable String email, @RequestBody Announcement announcement ) {
+//         just to avoid conflict I add another constructor At the end of Announcement model .
+//         I add findByUsername method in trainerRepository
+        try{
+            Trainer trainer = trainerRepository.findByEmail(email);
+            announcement.setTrainer(trainer);
+            announcementRepository.save(announcement);
+            return ResponseEntity.ok().body(announcement);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("The user is not found");
+        }
+
     }
 
     //Trainer can add sessions
-    @GetMapping("/Addsession")
-    public List<Session> sessionList(@RequestParam(value = "id") Long sessionID) {
-        Trainer trainer = new Trainer();
-        // create add to session method in Trainer model
-        trainer.addSession(sessionRepository.findById(sessionID).get());
-        return trainer.getSession();
+    @PostMapping("/add-session/{email}")
+    public ResponseEntity sessionList(@PathVariable String email, @RequestBody Session session) {
+        try{
+            Trainer trainer = trainerRepository.findByEmail(email);
+            // create add to session method in Trainer model
+            session.setTrainer(trainer);
+            sessionRepository.save(session);
+            return ResponseEntity.ok().body(session);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("The user is not found");
+        }
     }
 
     // A trainer can remove one of his Trainee
-    @GetMapping("/removeTrainee")
-    public List<Trainee> removeTrainee(@RequestParam(value = "id") Long traineeID) {
-        Trainer trainer = new Trainer();
-        // create add to session method in Trainer model
-        trainer.deleteTrainee(traineeRepository.findById(traineeID).get());
-        return trainer.getTrainee();
-    }
+    @DeleteMapping("/removeTrainee/{trainee}")
+    public ResponseEntity deleteTrainer(@PathVariable String trainee) {
+        try {
+            Trainee newTrainee = traineeRepository.findByEmail(trainee);
+            newTrainee.setTrainer(null);
+            traineeRepository.save(newTrainee);
+            return ResponseEntity.ok("Deleted");
 
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("You can't");
+        }
+
+    }
     //Trainer can list his/her trainee
-    @GetMapping("/allTrainee")
-    public List<Trainee> GetAllTrainee() {
-        Trainer trainer = new Trainer();
-        return trainer.getTrainee();
+    @GetMapping("/all-trainee/{email}")
+    public List<Trainee> GetAllTrainee(@PathVariable String email) {
+        return trainerRepository.findByEmail(email).getTrainee();
     }
 
-    @PostMapping("/signupTraniner")
-    public String signupTrainer(@RequestBody Trainer trainer) {
-//        System.out.println(trainer);
-//        trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
-        trainerRepository.save(trainer);
-        return "yes";
-    }
 
 }

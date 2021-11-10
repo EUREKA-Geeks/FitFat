@@ -22,7 +22,7 @@ public class Trainer extends Users {
 
 
     @OneToMany(mappedBy = "trainer", orphanRemoval = true)
-    private List<Session> session;
+    public List<Session> session;
     private int price;
 
     @OneToMany(mappedBy = "trainer", orphanRemoval = true)
