@@ -97,15 +97,5 @@ public abstract class Users {
         this.phoneNumber = phoneNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", image='" + image + '\'' +
-                ", gym=" + gym +
-                '}';
-    }
+
 }
