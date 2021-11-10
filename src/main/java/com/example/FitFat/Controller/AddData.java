@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AddData {
 
     @GetMapping("/add-gym")
-    public String gym(Model model){
+    public String gym(Model model) {
         ArrayList l1 = new ArrayList();
         ArrayList l2 = new ArrayList();
         l1.add("Al-aayan street");
@@ -20,8 +20,8 @@ public class AddData {
         ArrayList f2 = new ArrayList();
         f1.add("Car Parkings");
         f2.add("Sauna");
-        ArrayList <Gym> gymList = new ArrayList<>();
-        gymList.add(new Gym("Gold", l1, "064001222", f1 ));
+        ArrayList<Gym> gymList = new ArrayList<>();
+        gymList.add(new Gym("Gold", l1, "064001222", f1));
         gymList.add(new Gym("Doctor’s Gym - Inspo Fitness Clinic", l2, "07 9100 7000", f2));
         model.addAttribute("gym", gymList);
         return "gym";

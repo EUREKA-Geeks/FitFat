@@ -21,6 +21,14 @@ public abstract class Users {
     @Column(unique = true)
     private String phoneNumber;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getImage() {
         return image;
     }
@@ -31,7 +39,7 @@ public abstract class Users {
 
     private String image;
     @ManyToOne
-    @JoinColumn(name = "gym_id")
+    @JoinColumn(name = "gym_id_admin")
     private Gym gym;
 
     public Gym getGym() {
@@ -79,13 +87,4 @@ public abstract class Users {
     }
 
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id=" + id +
-                ", username='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
 }

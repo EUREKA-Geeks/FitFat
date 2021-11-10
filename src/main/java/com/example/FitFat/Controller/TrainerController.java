@@ -10,7 +10,6 @@ import com.example.FitFat.Repositories.TraineeRepository;
 import com.example.FitFat.Repositories.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -34,6 +33,7 @@ public class TrainerController {
     //// the return type will be changing for methods, no testing
 
     // Trainer can add announcement
+
     @PostMapping("/add-announcement/{email}")
     public ResponseEntity addAnnouncement(@PathVariable String email, @RequestBody Announcement announcement ) {
 //         just to avoid conflict I add another constructor At the end of Announcement model .
@@ -48,6 +48,7 @@ public class TrainerController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("The user is not found");
         }
+
     }
 
     //Trainer can add sessions

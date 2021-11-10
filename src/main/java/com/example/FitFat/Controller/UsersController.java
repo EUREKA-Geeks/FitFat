@@ -1,16 +1,19 @@
 package com.example.FitFat.Controller;
 
+import com.example.FitFat.Models.Trainee;
+import com.example.FitFat.Models.Trainer;
 import com.example.FitFat.Models.Users;
+import com.example.FitFat.Repositories.TraineeRepository;
+import com.example.FitFat.Repositories.TrainerRepository;
 import com.example.FitFat.Repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UsersController {
@@ -19,36 +22,37 @@ public class UsersController {
     UsersRepository usersRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    TrainerRepository trainerRepository;
 
+    @Autowired
+    TraineeRepository traineeRepository;
 
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public Users getUser(@PathVariable Long id) {
-        return usersRepository.findById(id).get();
+    @GetMapping("/users/{email}")
+    public Users getUser(@PathVariable String email) {
+        return usersRepository.findByEmail(email);
     }
-
-    //sign up new User with redirect login
 
 
     //User can edit his profile
-    @PutMapping("/update/{id}")
-    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody Users users) {
-//        Users updateUser = usersRepository.findById(id).get();
-//        updateUser.setUsername(users.getUsername());
-//        updateUser.setPassword(users.getPassword());
-//        updateUser.setFirstName(users.getFirstName());
-//        updateUser.setLastName(users.getLastName());
-//        updateUser.setDOB(users.getDOB());
-//        updateUser.setEmail(users.getEmail());
-//        updateUser.setPhoneNumber(users.getPhoneNumber());
-//        updateUser = usersRepository.save(users);
-        usersRepository.save(users);
-        return ResponseEntity.ok(users);
+    @PutMapping("/trainee/{email}")
+    public ResponseEntity updateFromTraineeToTrainer(@PathVariable String email) {
+        Trainee trainee = traineeRepository.findByEmail(email);
+        traineeRepository.delete(trainee);
+        trainerRepository.save(new Trainer(trainee.getEmail(), trainee.getImage(), trainee.getName(), trainee.getPhoneNumber()));
+        return ResponseEntity.ok(trainee);
+    }
+
+    @PostMapping("/create")
+    public String createUser(@RequestBody Trainee trainee) {
+        traineeRepository.save(trainee);
+        System.out.println(trainee);
+        return "yes";
+
     }
 
 
