@@ -25,6 +25,7 @@ public class TraineeController {
 
     @Autowired
     GymRepository gymRepository;
+
     @Autowired
     TrainerRepository trainerRepository;
 
